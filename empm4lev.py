@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 #DATA
-price=pd.read_excel("emp_price_20180528.xlsx",index_col=0)
+price=pd.read_excel("emp_price_20180614.xlsx",index_col=0)
 etf=pd.read_excel("etf.xlsx",index_col=0)
 
 #전체 etf 포트폴리오 구성
@@ -22,6 +22,7 @@ def all_etf_port(etf):
 
 alletf=all_etf_port(etf) #맨처음에 한번만 만들면 됨
 alletf['122630']=price['122630']
+alletf['069500']=price['069500']
 #alletf.to_excel('all_etf.xlsx') #엑셀파일로 저장
 
 #Datetime이용해서 월별 데이터 갯수 및 rebalancing마다 데이터 갯수 저장
@@ -139,6 +140,15 @@ def market(num,j):
     d=temp+j
     return alletf['122630'].iloc[c:d]
 
+#수익률 관찰 포트에 Kodex200 데이터 추가
+def market_forsharp(num,j):
+    temp=0
+    for k in range(num):
+        temp+=month_date[k]
+    c=temp
+    d=temp+j
+    return alletf['069500'].iloc[c:d]
+
 #포트폴리오 수익률, 표준편차 구하기
 def port_ret_s(w,port,mkt): ##port=pt:포트폴리오 전체 가격이랑 같이(DF), pf=pf:컬럼 리스트만
     ret_port_m=pd.Series(port.pct_change().cumsum().tail(1).iloc[0,:])
@@ -189,7 +199,7 @@ for i in range(36):
             rs=port_ret_s([0.0,1.0],mk,mk)
             dd=pd.concat([dd,rs])
             sec=list(['122630'])
-            sr.append([0])
+            sr.append(sharpe(rs,pd.DataFrame(market_forsharp(12+j,month_date[12+j]))))
             u=mk.index.to_datetime()
             y=u[0].year
             m=u[0].month
@@ -215,7 +225,7 @@ for i in range(36):
         dd=pd.concat([dd,rs])
         sec=list(pt.columns)
         sec.append('122630')
-        sr.append(sharpe(rs,mk))
+        sr.append(sharpe(rs,pd.DataFrame(market_forsharp(12+j,month_date[12+j]))))
         u=pr.index.to_datetime()
         y=u[0].year
         m=u[0].month
@@ -238,4 +248,4 @@ dd_final=pd.concat([dd_name_f,dd_final],1)
 dd_final.columns=['port','num','month','security','weight','std','return','sr']
 dd_final.index=dd_final.pop("port")
 
-dd_final.to_excel('final_empm4lev.xlsx')
+dd_final.to_excel('final_empm4lev_20180614.xlsx')

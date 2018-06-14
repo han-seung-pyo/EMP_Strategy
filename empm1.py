@@ -17,7 +17,7 @@ import pandas as pd
 #from pandas.tseries.offsets import BDay
 
 #DATA
-price=pd.read_excel("emp_price_20180528.xlsx",index_col=0)
+price=pd.read_excel("emp_price_20180614.xlsx",index_col=0)
 etf=pd.read_excel("etf.xlsx",index_col=0)
 
 #전체 etf 포트폴리오 구성
@@ -248,4 +248,4 @@ dd_final=pd.concat([dd_name_f,dd_final],1)
 dd_final.columns=['port','num','month','security','weight','std','return','sr']
 dd_final.index=dd_final.pop("port")
 
-#dd_final.to_excel('final_empm1.xlsx')
+dd_final.to_excel('final_empm1_20180614.xlsx')
