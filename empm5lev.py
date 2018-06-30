@@ -5,7 +5,9 @@ empm5lev.py
 '''
 import numpy as np
 import pandas as pd
+import os
 
+os.chdir('/Users/min/Documents/git/EMP_Strategy')
 #DATA
 price=pd.read_excel("emp_price_20180614.xlsx",index_col=0)
 etf=pd.read_excel("etf.xlsx",index_col=0)
